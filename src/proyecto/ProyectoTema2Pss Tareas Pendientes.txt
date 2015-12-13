@@ -1,0 +1,64 @@
+-Cambios en la clase parking
+
+	-Modificar constructor, añadir atributo int para indicar la capacidad maxima del parking
+
+	-Añadir los siguientes atributos privados e inicializarlos desde el constructor:
+		-JLabel etiquetaEstadoParking 
+		-JLabel cochesEnEspera
+		-JLabel plazasDisponibles
+		-JTextArea logs
+
+	-Eliminar los métodos getPlazasDisponibles y getVehiculosEnEspera
+
+** Siempre que se añada un log se hace desplazando el texto que habia hacia abajo e introduciendo la nueva la primera **
+
+	-Modificar metodo llegavehiculo:
+		-int > void y en lugar de devolver introduce un log con los coches que han entrado en el caso de que hayan entrado
+			en caso de que no haya entrado ninguno indicar que se ha añadido a la cola de coches en espera
+		-cuando se iguala lleno a true, etiquetaEstadoParking introducir texto ocupado
+		-al final introducir log indicando que hay sitio en el parking y sigue generando plazas
+		-al final modificar las etiquetas cochesEnEspera y plazasDisponibles mostrando la cantidad en ese momento
+
+	-Modificar metodo salidaVehiculo:
+		-justo antes del wait añadir un log indicando que el parking esta completamente vacio y que no se estan generando mas plazas
+		-despues de cambiar lleno a false cambiar la etiquetaEstadoParking a "Libre"
+		-al final modificar la etiqueta plazasDisponibles mostrando la cantidad en ese momento
+		-añadir log plaza generada
+		
+
+-Cambios en la clase LlegadaVehiculos
+	
+	-añadir un atributo privado int factorVelocidadLlegada que será el numero de segundos que el hilo espera antes de que llegue un vehiculo
+	-inicializar este atributo desde el constructor por defecto a 5
+	-crear un set para modificar este valor
+	
+	-Modificar metodo run >
+		(sleep = 1000 * factorVelocidadLlegada), el valor maximo será 10 y el minimo 1, esto se controlará desde la interfaz
+		(este valor es inverso a la cantidad de tiempo que dormirá el hilo así que si llega a 10 significará que es la velocidad mas baja
+		y no llamará al metodo llegaVehiculo, hará un sleep de 1000 ms tan solo)
+
+-Cambios en la clase SalidaParking
+
+	-mismos cambios que en la clase LlegadaVehiculos pero aplicado a sus metodos
+
+-Cambios en la Interfaz
+
+	-JTextArea y JLabels utilizados en la clase Parking inicializarlosal principio del inicialize
+	-Solicitar mediante un JOptionPane un numero entero que indique la capacidad maxima del parking y guardarlo en un int
+		-controlar que sea un numero entero positivo y que en caso de no hacerlo el programa finalice
+	-Inicializar la clase parking con sus correspondientes atributos.
+	-Inicializar las clases SalidaParking y LlegadaVehiculo
+	
+	-Listener de los botones para aumentar la velocidad de llegada y salida y crear dos atributos privados int para controlarlos > factorLlegada y factorSalida
+		-al pulsar el boton + hay que reducir el numero porque se supone que estamos reduciendo el tiempo que duerme el hilo para que lleguen o salgan mas rapido los vehiculos
+		-al pulsar el boton - hay que aumentar el numero porque se supone que estamos aumentando el tiempo que duerme el hilo para que lleguen o salgan mas lento los vehiculos		
+		-controlar que estos numeros esten entre 1 y 10
+		-hacer el correspondiente set a las clases LlegadaVehiculos o SalidaParking según corresponda
+		-modificar la etiqueta mostrando cada cuanto tiempo llega/sale un vehiculo y si llega a 10 este valor indicar que han dejado de llegar/salir
+
+	-Listener botones forzar
+		-al pulsarlo se creará un hilo con una clase interna que se ejecutará una sola vez llamando al método llegavehiculo o salidavehiculo segun el boton que corresponda
+
+	-Lanzar los hilos de las clases SalidaParking y LlegadaVehiculo
+	
+	-Lanzar una clase timer que lea el valor de la etiqueta plazasDisponibles y haga un grafico mostrando la ocupacion del parking y el % y que se redibuje cada 1 seg
