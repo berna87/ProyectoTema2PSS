@@ -13,9 +13,10 @@ public class SalidaParking extends Thread{
     public void run() {    
             while (true){
                     try {
-                    	if(factorVelocidadSalida==10){}
-                    	else{
-                    	//por defecto genera una plaza cada segundo
+                    	if(factorVelocidadSalida==10){
+                    		Thread.sleep(1000);
+                    	}else{
+           
                             Thread.sleep(1000*factorVelocidadSalida);
                             parking.salidaVehiculo();}
                     } catch (InterruptedException e) {

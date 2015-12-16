@@ -17,6 +17,7 @@ public class Parking {
 	private JLabel etiquetacochesEnEspera;
 	private JLabel etiquetaplazasDisponibles;
 	private JTextArea logs;
+	private int contadorLogs=1;
 	
 	/**
 	 * 
@@ -54,9 +55,24 @@ public class Parking {
 		this.lleno = false;
 		//si el numero de plazas disponibles es igual a su capacidad significa que esta vacio y por tanto no puede generar mas plazas
 		this.vacio = this.plazasDisponibles == this.capacidad;
-		etiquetaplazasDisponibles.setText(""+this.plazasDisponibles);
 		String aux = logs.getText();
-		logs.setText("Ha salido un vehiculo - "+ Thread.currentThread().getName()+"\n"+aux);
+		logs.setText(contadorLogs+"- Ha salido un vehiculo\n"+aux);
+		contadorLogs++;
+		if(cochesEnEspera>0){
+			int vehiculosEntraron = plazasDisponibles;
+			cochesEnEspera = cochesEnEspera - plazasDisponibles;
+			plazasDisponibles = 0;
+			this.lleno = true;
+			this.vacio = false;
+			etiquetaplazasDisponibles.setText(plazasDisponibles+"");
+			etiquetaEstadoParking.setText("Lleno");
+			etiquetacochesEnEspera.setText(cochesEnEspera+"");
+			aux = logs.getText();
+			logs.setText(contadorLogs+" - Vehiculos que entraron : "+vehiculosEntraron+"\n"+aux);
+			contadorLogs++;
+		}
+		
+		etiquetaplazasDisponibles.setText(""+this.plazasDisponibles);
 	}
 	
 	/**
@@ -69,7 +85,8 @@ public class Parking {
 	//este metodo devolverá el numero de coches que consiguieron entrar al parking
 	public synchronized void llegaVehiculo(){
 		String aux = logs.getText();
-		logs.setText("Ha llegado un vehiculo - "+ Thread.currentThread().getName()+"\n"+aux);
+		logs.setText(contadorLogs+" - Ha llegado un vehiculo \n"+aux);
+		contadorLogs++;
 		int cochesEntraron = 0;
 		this.cochesEnEspera++;
 		if(!this.lleno){
@@ -79,6 +96,7 @@ public class Parking {
 				plazasDisponibles = plazasDisponibles - cochesEnEspera;
 				cochesEntraron = cochesEnEspera;
 				cochesEnEspera = 0;
+				
 				this.vacio = false;
 			}else{
 				//si el numero de coches en espera es igual o superior al numero de plazas disponibles
@@ -94,7 +112,8 @@ public class Parking {
 			//como ambas situaciones modifican el estado de vacio a false, despertarán si hay algun hilo intentando producir nuevas plazas para
 			//que sigan haciendolo
 			aux = logs.getText();
-			logs.setText("Entraron "+ cochesEntraron+" vehiculos - "+ Thread.currentThread().getName()+"\n"+aux);
+			logs.setText(contadorLogs+" - Vehiculos que entraron : "+ cochesEntraron+"\n"+aux);
+			contadorLogs++;
 			notifyAll();
 		}
 		etiquetacochesEnEspera.setText(""+this.cochesEnEspera);

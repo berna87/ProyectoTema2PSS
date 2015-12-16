@@ -78,6 +78,8 @@ public class InterfazParking {
 		//Inicializa las clases SalidaParking y LlegadaVehiculo
 		LlegadaVehiculo llegadavehiculo = new LlegadaVehiculo(p);
 		SalidaParking salidaparking = new SalidaParking(p);
+		
+		
 		JPanel panel = new JPanel();
 		
 		JPanel panel_1 = new JPanel();
@@ -130,6 +132,7 @@ public class InterfazParking {
 					lblSaleUnVehículo.setText("Sale un vehículo cada "+ factorSalida+" segundos");
 					if(factorSalida==10){
 						lblSaleUnVehículo.setText("Han dejado de salir vehiculos");
+						
 					} 
 				}
 			}
@@ -151,16 +154,16 @@ public class InterfazParking {
 		JButton btnForzarSalida = new JButton("Forzar salida de veh\u00EDculo");
 		btnForzarSalida.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new Thread(new Runnable() {
-					
-					@Override
-					public void run() {
-						// TODO Auto-generated method stub
-						if(lblLibreOcupado.getText().equals("Libre")){
-						p.salidaVehiculo();
+				if(!lblPlazasDisponibles.getText().equals(capacidadParkingString)){
+					new Thread(new Runnable() {
+						
+						@Override
+						public void run() {
+							// TODO Auto-generated method stub
+							p.salidaVehiculo();
 						}
-					}
-				}).start();
+					}).start();
+				}
 			}
 		});
 		GroupLayout gl_panel_2 = new GroupLayout(panel_2);
