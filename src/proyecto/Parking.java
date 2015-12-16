@@ -2,6 +2,9 @@ package proyecto;
 
 import java.util.Random;
 
+import javax.swing.JLabel;
+import javax.swing.JTextArea;
+
 
 
 public class Parking {
@@ -10,17 +13,25 @@ public class Parking {
 	private int capacidad;
 	private boolean lleno;
 	private boolean vacio;
+	private JLabel etiquetaEstadoParking ;
+	private JLabel etiquetacochesEnEspera;
+	private JLabel etiquetaplazasDisponibles;
+	private JTextArea logs;
 	
 	/**
 	 * 
 	 * @param capacidad Cantidad de vehiculos que cogen en el parking
 	 */
-	public Parking(int capacidad) {
+	public Parking(int capacidad, JLabel etiquetaEstadoParking, JLabel etiquetacochesEnEspera, JLabel etiquetaplazasDisponibles, JTextArea logs ) {
 		//partimos de que el parking esta vacio y que tiene todas sus plazas libres
 		this.capacidad = capacidad;
 		this.plazasDisponibles = capacidad;
 		this.lleno = false;
 		this.vacio = true;
+		this.etiquetacochesEnEspera = etiquetacochesEnEspera;
+		this.etiquetaEstadoParking = etiquetaEstadoParking;
+		this.etiquetaplazasDisponibles = etiquetaplazasDisponibles;
+		this.logs = logs;
 	}
 	/**
 	 *  Genera una plaza disponible en el parking
@@ -30,6 +41,8 @@ public class Parking {
 		//el hilo esperará
 		while(this.vacio){
 			try {
+				String aux = logs.getText();
+				logs.setText("El parking esta vacio, no se estan generando plazas. - "+ Thread.currentThread().getName()+"\n");
 				wait();
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
@@ -39,9 +52,11 @@ public class Parking {
 		//cuando haya entrado un vehiculo y por tanto, haya ocupado una plaza, el hilo que utilice este metodo
 		//continuará generando plazas
 		this.plazasDisponibles++;
+		etiquetaEstadoParking.setText("Libre");
 		this.lleno = false;
 		//si el numero de plazas disponibles es igual a su capacidad significa que esta vacio y por tanto no puede generar mas plazas
 		this.vacio = this.plazasDisponibles == this.capacidad;
+		etiquetaplazasDisponibles.setText(""+this.plazasDisponibles);
 	}
 	
 	/**
@@ -52,7 +67,7 @@ public class Parking {
 	//el hilo que utilice este metodo no quedara parado, unicamente puede despertar a los demas hilos
 	//puesto que en el caso de que haya algun sitio en el parking, entrará ocupando tantas plazas como pueda y tenga en espera
 	//este metodo devolverá el numero de coches que consiguieron entrar al parking
-	public synchronized int llegaVehiculo(){
+	public synchronized void llegaVehiculo(){
 		int cochesEntraron = 0;
 		this.cochesEnEspera++;
 		if(!this.lleno){
@@ -71,39 +86,16 @@ public class Parking {
 				cochesEnEspera = cochesEnEspera - plazasDisponibles;
 				plazasDisponibles = 0;
 				this.lleno = true;
+				etiquetaEstadoParking.setText("Lleno");
 				this.vacio = false;
 			}
 			//como ambas situaciones modifican el estado de vacio a false, despertarán si hay algun hilo intentando producir nuevas plazas para
 			//que sigan haciendolo
+			String aux = logs.getText();
+			logs.setText("Entraron "+ cochesEntraron+" vehiculos - "+ Thread.currentThread().getName()+"\n");
 			notifyAll();
 		}
-		return cochesEntraron;
+		etiquetacochesEnEspera.setText(""+this.cochesEnEspera);
+		etiquetaplazasDisponibles.setText(""+this.plazasDisponibles);
 	}
-	
-	/**
-	 * 
-	 * @return la cantidad de plazas disponibles en el parking
-	 */
-	
-	public synchronized int getPlazasDisponibles(){
-		return this.plazasDisponibles;
-	}
-	/**
-	 * 
-	 * @return la cantidad de vehiculos que hay en espera en un momento dado
-	 */
-	public synchronized int getVehiculosEnEspera(){
-		return this.cochesEnEspera;
-	}
-	
-	//test para comprobar el funcionamiento de la clase
-	/*
-	public static void main(String[] args) {
-		Parking p = new Parking(20);
-		Thread hilo1 = new SalidaParking(p);
-		Thread hilo2 = new LlegadaVehiculo(p);
-		hilo2.start();
-		hilo1.start();
-	}
-	*/
 }
