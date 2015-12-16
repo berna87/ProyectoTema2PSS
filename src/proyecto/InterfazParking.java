@@ -13,6 +13,8 @@ import javax.swing.SwingConstants;
 import javax.swing.JButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class InterfazParking {
 
@@ -21,6 +23,8 @@ public class InterfazParking {
 	private JLabel CochesEnEspera;
 	private JLabel lblPlazasDisponibles;
 	private JTextArea textAreaLogs;
+	private int factorLlegada =5;
+	private int factorSalida = 5;
 
 	/**
 	 * Launch the application.
@@ -52,12 +56,14 @@ public class InterfazParking {
 		frmParking = new JFrame();
 		frmParking.setTitle("Parking");
 		frmParking.setResizable(false);
-		frmParking.setBounds(100, 100, 463, 409);
+		frmParking.setBounds(100, 100, 632, 512);
 		frmParking.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		lblLibreOcupado = new JLabel("Libre");
 		CochesEnEspera = new JLabel("xxx");
 		lblPlazasDisponibles = new JLabel("xxx");
 		textAreaLogs = new JTextArea();
+		JLabel lblSaleUnVehículo = new JLabel("Sale un veh\u00EDculo cada 5 segundos");
+		JLabel lblLlegaUnVehculo = new JLabel("Llega un veh\u00EDculo cada 5 segundos");
 		
 		String capacidadParkingString = JOptionPane.showInputDialog(frmParking, "Introduce la capacidad del parking","Capacidad",JOptionPane.DEFAULT_OPTION); 
 		
@@ -67,6 +73,11 @@ public class InterfazParking {
 			System.exit(0);
 		}
 		int capacidadParking = Integer.parseInt(capacidadParkingString);
+		//Inicializa la clase parking con sus correspondientes atributos
+		Parking p = new Parking(capacidadParking, lblLibreOcupado, CochesEnEspera, lblPlazasDisponibles, textAreaLogs);
+		//Inicializa las clases SalidaParking y LlegadaVehiculo
+		LlegadaVehiculo llegadavehiculo = new LlegadaVehiculo(p);
+		SalidaParking salidaparking = new SalidaParking(p);
 		JPanel panel = new JPanel();
 		
 		JPanel panel_1 = new JPanel();
@@ -79,16 +90,16 @@ public class InterfazParking {
 			groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
 					.addContainerGap()
-					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING, false)
 						.addGroup(groupLayout.createSequentialGroup()
 							.addComponent(panel, GroupLayout.PREFERRED_SIZE, 211, GroupLayout.PREFERRED_SIZE)
-							.addPreferredGap(ComponentPlacement.RELATED)
+							.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
 							.addComponent(panel_2, GroupLayout.PREFERRED_SIZE, 213, GroupLayout.PREFERRED_SIZE))
 						.addGroup(groupLayout.createSequentialGroup()
 							.addComponent(panel_1, GroupLayout.PREFERRED_SIZE, 211, GroupLayout.PREFERRED_SIZE)
 							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(panel_3, GroupLayout.PREFERRED_SIZE, 213, GroupLayout.PREFERRED_SIZE)))
-					.addContainerGap(353, Short.MAX_VALUE))
+							.addComponent(panel_3, GroupLayout.PREFERRED_SIZE, 377, GroupLayout.PREFERRED_SIZE)))
+					.addContainerGap(22, Short.MAX_VALUE))
 		);
 		groupLayout.setVerticalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
@@ -99,9 +110,9 @@ public class InterfazParking {
 						.addComponent(panel_2, GroupLayout.PREFERRED_SIZE, 170, GroupLayout.PREFERRED_SIZE))
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-						.addComponent(panel_3, GroupLayout.PREFERRED_SIZE, 173, GroupLayout.PREFERRED_SIZE)
-						.addComponent(panel_1, GroupLayout.PREFERRED_SIZE, 176, GroupLayout.PREFERRED_SIZE))
-					.addContainerGap(105, Short.MAX_VALUE))
+						.addComponent(panel_1, GroupLayout.DEFAULT_SIZE, 285, Short.MAX_VALUE)
+						.addComponent(panel_3, GroupLayout.DEFAULT_SIZE, 285, Short.MAX_VALUE))
+					.addContainerGap())
 		);
 		
 		JLabel lblNewLabel_3 = new JLabel("Salida de coches");
@@ -111,12 +122,47 @@ public class InterfazParking {
 		lblVelocidad.setHorizontalAlignment(SwingConstants.CENTER);
 		
 		JButton btnNewButton = new JButton("-");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(factorSalida<10){
+					factorSalida++;
+					salidaparking.setFactorVelocidadSalida(factorSalida);
+					lblSaleUnVehículo.setText("Sale un vehículo cada "+ factorSalida+" segundos");
+					if(factorSalida==10){
+						lblSaleUnVehículo.setText("Han dejado de salir vehiculos");
+					} 
+				}
+			}
+		});
 		
 		JButton btnNewButton_1 = new JButton("+");
+		btnNewButton_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(factorSalida>1){
+					factorSalida--;
+					salidaparking.setFactorVelocidadSalida(factorSalida);
+					lblSaleUnVehículo.setText("Sale un vehículo cada "+ factorSalida+" segundos");
+				}
+			}
+		});
 		
-		JLabel lblSaleUnVehículo = new JLabel("Sale un veh\u00EDculo cada segundos");
+		
 		
 		JButton btnForzarSalida = new JButton("Forzar salida de veh\u00EDculo");
+		btnForzarSalida.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				new Thread(new Runnable() {
+					
+					@Override
+					public void run() {
+						// TODO Auto-generated method stub
+						if(lblLibreOcupado.getText().equals("Libre")){
+						p.salidaVehiculo();
+						}
+					}
+				}).start();
+			}
+		});
 		GroupLayout gl_panel_2 = new GroupLayout(panel_2);
 		gl_panel_2.setHorizontalGroup(
 			gl_panel_2.createParallelGroup(Alignment.LEADING)
@@ -191,15 +237,16 @@ public class InterfazParking {
 			gl_panel_1.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_panel_1.createSequentialGroup()
 					.addContainerGap()
-					.addGroup(gl_panel_1.createParallelGroup(Alignment.TRAILING, false)
-						.addComponent(lblNewLabel_2, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-						.addComponent(lblEstadoParking, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-						.addComponent(lbl1, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 110, Short.MAX_VALUE))
+					.addGroup(gl_panel_1.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_panel_1.createParallelGroup(Alignment.TRAILING, false)
+							.addComponent(lblNewLabel_2, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+							.addComponent(lblEstadoParking, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+						.addComponent(lbl1, GroupLayout.DEFAULT_SIZE, 110, Short.MAX_VALUE))
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addGroup(gl_panel_1.createParallelGroup(Alignment.LEADING)
 						.addComponent(lblPlazasDisponibles, GroupLayout.DEFAULT_SIZE, 75, Short.MAX_VALUE)
 						.addComponent(CochesEnEspera, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 75, Short.MAX_VALUE)
-						.addComponent(lblLibreOcupado, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 92, Short.MAX_VALUE))
+						.addComponent(lblLibreOcupado, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 75, Short.MAX_VALUE))
 					.addContainerGap())
 		);
 		gl_panel_1.setVerticalGroup(
@@ -210,8 +257,8 @@ public class InterfazParking {
 						.addComponent(lblEstadoParking, GroupLayout.PREFERRED_SIZE, 36, GroupLayout.PREFERRED_SIZE)
 						.addComponent(lblLibreOcupado, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE))
 					.addPreferredGap(ComponentPlacement.RELATED)
-					.addGroup(gl_panel_1.createParallelGroup(Alignment.LEADING)
-						.addComponent(CochesEnEspera, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+					.addGroup(gl_panel_1.createParallelGroup(Alignment.BASELINE)
+						.addComponent(CochesEnEspera, GroupLayout.DEFAULT_SIZE, 57, Short.MAX_VALUE)
 						.addComponent(lbl1, GroupLayout.PREFERRED_SIZE, 57, GroupLayout.PREFERRED_SIZE))
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addGroup(gl_panel_1.createParallelGroup(Alignment.BASELINE)
@@ -228,13 +275,46 @@ public class InterfazParking {
 		lblNewLabel_1.setHorizontalAlignment(SwingConstants.CENTER);
 		
 		JButton btnDisminuirVelocidadLlegada = new JButton("-");
+		btnDisminuirVelocidadLlegada.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(factorLlegada<10){
+					factorLlegada++;
+					llegadavehiculo.setFactorVelocidadLlegada(factorLlegada);
+					lblLlegaUnVehculo.setText("Llega un veh\u00EDculo cada "+factorLlegada+" segundos");
+					if(factorLlegada==10){
+						lblLlegaUnVehculo.setText("Han dejado de llegar vehiculos");
+					}
+					
+				}
+			}
+		});
 		
 		JButton btnAumentarVelocidadLlegada = new JButton("+");
+		btnAumentarVelocidadLlegada.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if(factorLlegada>1){
+					factorLlegada--;
+					lblLlegaUnVehculo.setText("Llega un veh\u00EDculo cada "+factorLlegada+" segundos");
+					llegadavehiculo.setFactorVelocidadLlegada(factorLlegada);
+				}
+			}
+		});
 		
-		JLabel lblLlegaUnVehculo = new JLabel("Llega un veh\u00EDculo cada segundos");
+		
 		lblLlegaUnVehculo.setHorizontalAlignment(SwingConstants.CENTER);
 		
 		JButton btnForzarLlegada = new JButton("Forzar llegada de vehiculo");
+		btnForzarLlegada.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				new Thread(new Runnable() {
+					
+					@Override
+					public void run() {
+						p.llegaVehiculo();
+					}
+				}).start();
+			}
+		});
 		GroupLayout gl_panel = new GroupLayout(panel);
 		gl_panel.setHorizontalGroup(
 			gl_panel.createParallelGroup(Alignment.LEADING)
@@ -270,6 +350,8 @@ public class InterfazParking {
 		);
 		panel.setLayout(gl_panel);
 		frmParking.getContentPane().setLayout(groupLayout);
+		llegadavehiculo.start();
+		salidaparking.start();
 
 	}
 	

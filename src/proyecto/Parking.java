@@ -25,7 +25,7 @@ public class Parking {
 	public Parking(int capacidad, JLabel etiquetaEstadoParking, JLabel etiquetacochesEnEspera, JLabel etiquetaplazasDisponibles, JTextArea logs ) {
 		//partimos de que el parking esta vacio y que tiene todas sus plazas libres
 		this.capacidad = capacidad;
-		this.plazasDisponibles = capacidad;
+		this.plazasDisponibles = capacidad/2;
 		this.lleno = false;
 		this.vacio = true;
 		this.etiquetacochesEnEspera = etiquetacochesEnEspera;
@@ -41,8 +41,6 @@ public class Parking {
 		//el hilo esperará
 		while(this.vacio){
 			try {
-				String aux = logs.getText();
-				logs.setText("El parking esta vacio, no se estan generando plazas. - "+ Thread.currentThread().getName()+"\n");
 				wait();
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
@@ -57,6 +55,8 @@ public class Parking {
 		//si el numero de plazas disponibles es igual a su capacidad significa que esta vacio y por tanto no puede generar mas plazas
 		this.vacio = this.plazasDisponibles == this.capacidad;
 		etiquetaplazasDisponibles.setText(""+this.plazasDisponibles);
+		String aux = logs.getText();
+		logs.setText("Ha salido un vehiculo - "+ Thread.currentThread().getName()+"\n"+aux);
 	}
 	
 	/**
@@ -68,6 +68,8 @@ public class Parking {
 	//puesto que en el caso de que haya algun sitio en el parking, entrará ocupando tantas plazas como pueda y tenga en espera
 	//este metodo devolverá el numero de coches que consiguieron entrar al parking
 	public synchronized void llegaVehiculo(){
+		String aux = logs.getText();
+		logs.setText("Ha llegado un vehiculo - "+ Thread.currentThread().getName()+"\n"+aux);
 		int cochesEntraron = 0;
 		this.cochesEnEspera++;
 		if(!this.lleno){
@@ -91,8 +93,8 @@ public class Parking {
 			}
 			//como ambas situaciones modifican el estado de vacio a false, despertarán si hay algun hilo intentando producir nuevas plazas para
 			//que sigan haciendolo
-			String aux = logs.getText();
-			logs.setText("Entraron "+ cochesEntraron+" vehiculos - "+ Thread.currentThread().getName()+"\n");
+			aux = logs.getText();
+			logs.setText("Entraron "+ cochesEntraron+" vehiculos - "+ Thread.currentThread().getName()+"\n"+aux);
 			notifyAll();
 		}
 		etiquetacochesEnEspera.setText(""+this.cochesEnEspera);
