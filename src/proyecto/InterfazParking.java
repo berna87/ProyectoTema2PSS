@@ -1,6 +1,6 @@
 package proyecto;
 
-import java.awt.EventQueue;
+
 
 import javax.swing.JFrame;
 import javax.swing.GroupLayout;
@@ -15,6 +15,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.Color;
+import java.awt.EventQueue;
 
 public class InterfazParking {
 
@@ -25,7 +27,7 @@ public class InterfazParking {
 	private JTextArea textAreaLogs;
 	private int factorLlegada =5;
 	private int factorSalida = 5;
-
+	
 	/**
 	 * Launch the application.
 	 */
@@ -56,7 +58,7 @@ public class InterfazParking {
 		frmParking = new JFrame();
 		frmParking.setTitle("Parking");
 		frmParking.setResizable(false);
-		frmParking.setBounds(100, 100, 632, 512);
+		frmParking.setBounds(100, 100, 625, 585);
 		frmParking.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		lblLibreOcupado = new JLabel("Libre");
 		CochesEnEspera = new JLabel("xxx");
@@ -64,6 +66,8 @@ public class InterfazParking {
 		textAreaLogs = new JTextArea();
 		JLabel lblSaleUnVehículo = new JLabel("Sale un veh\u00EDculo cada 5 segundos");
 		JLabel lblLlegaUnVehculo = new JLabel("Llega un veh\u00EDculo cada 5 segundos");
+		JButton buttonVerde = new JButton("");
+		JButton buttonRojo = new JButton("");
 		
 		String capacidadParkingString = JOptionPane.showInputDialog(frmParking, "Introduce la capacidad del parking","Capacidad",JOptionPane.DEFAULT_OPTION); 
 		
@@ -74,7 +78,7 @@ public class InterfazParking {
 		}
 		int capacidadParking = Integer.parseInt(capacidadParkingString);
 		//Inicializa la clase parking con sus correspondientes atributos
-		Parking p = new Parking(capacidadParking, lblLibreOcupado, CochesEnEspera, lblPlazasDisponibles, textAreaLogs);
+		Parking p = new Parking(capacidadParking, lblLibreOcupado, CochesEnEspera, lblPlazasDisponibles, textAreaLogs,buttonVerde,buttonRojo);
 		//Inicializa las clases SalidaParking y LlegadaVehiculo
 		LlegadaVehiculo llegadavehiculo = new LlegadaVehiculo(p);
 		SalidaParking salidaparking = new SalidaParking(p);
@@ -87,33 +91,47 @@ public class InterfazParking {
 		JPanel panel_2 = new JPanel();
 		
 		JPanel panel_3 = new JPanel();
+		
+		
+		
 		GroupLayout groupLayout = new GroupLayout(frmParking.getContentPane());
 		groupLayout.setHorizontalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
 					.addContainerGap()
-					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING, false)
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
 						.addGroup(groupLayout.createSequentialGroup()
 							.addComponent(panel, GroupLayout.PREFERRED_SIZE, 211, GroupLayout.PREFERRED_SIZE)
-							.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+							.addGap(49)
+							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+								.addComponent(buttonRojo, GroupLayout.PREFERRED_SIZE, 68, GroupLayout.PREFERRED_SIZE)
+								.addComponent(buttonVerde, GroupLayout.PREFERRED_SIZE, 68, GroupLayout.PREFERRED_SIZE))
+							.addGap(53)
 							.addComponent(panel_2, GroupLayout.PREFERRED_SIZE, 213, GroupLayout.PREFERRED_SIZE))
 						.addGroup(groupLayout.createSequentialGroup()
 							.addComponent(panel_1, GroupLayout.PREFERRED_SIZE, 211, GroupLayout.PREFERRED_SIZE)
 							.addPreferredGap(ComponentPlacement.RELATED)
 							.addComponent(panel_3, GroupLayout.PREFERRED_SIZE, 377, GroupLayout.PREFERRED_SIZE)))
-					.addContainerGap(22, Short.MAX_VALUE))
+					.addGap(258))
 		);
 		groupLayout.setVerticalGroup(
-			groupLayout.createParallelGroup(Alignment.LEADING)
+			groupLayout.createParallelGroup(Alignment.TRAILING)
 				.addGroup(groupLayout.createSequentialGroup()
-					.addContainerGap()
 					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-						.addComponent(panel, GroupLayout.PREFERRED_SIZE, 170, GroupLayout.PREFERRED_SIZE)
-						.addComponent(panel_2, GroupLayout.PREFERRED_SIZE, 170, GroupLayout.PREFERRED_SIZE))
-					.addPreferredGap(ComponentPlacement.RELATED)
+						.addGroup(groupLayout.createSequentialGroup()
+							.addGap(24)
+							.addComponent(buttonRojo, GroupLayout.PREFERRED_SIZE, 59, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(buttonVerde, GroupLayout.PREFERRED_SIZE, 59, GroupLayout.PREFERRED_SIZE))
+						.addGroup(groupLayout.createSequentialGroup()
+							.addContainerGap()
+							.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
+								.addComponent(panel_2, GroupLayout.PREFERRED_SIZE, 170, GroupLayout.PREFERRED_SIZE)
+								.addComponent(panel, GroupLayout.PREFERRED_SIZE, 170, GroupLayout.PREFERRED_SIZE))))
+					.addGap(12)
 					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-						.addComponent(panel_1, GroupLayout.DEFAULT_SIZE, 285, Short.MAX_VALUE)
-						.addComponent(panel_3, GroupLayout.DEFAULT_SIZE, 285, Short.MAX_VALUE))
+						.addComponent(panel_1, GroupLayout.DEFAULT_SIZE, 352, Short.MAX_VALUE)
+						.addComponent(panel_3, GroupLayout.DEFAULT_SIZE, 352, Short.MAX_VALUE))
 					.addContainerGap())
 		);
 		
@@ -357,5 +375,4 @@ public class InterfazParking {
 		salidaparking.start();
 
 	}
-	
 }

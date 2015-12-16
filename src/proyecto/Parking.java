@@ -1,7 +1,9 @@
 package proyecto;
 
+import java.awt.Color;
 import java.util.Random;
 
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JTextArea;
 
@@ -18,12 +20,15 @@ public class Parking {
 	private JLabel etiquetaplazasDisponibles;
 	private JTextArea logs;
 	private int contadorLogs=1;
+	private JButton botonVerde;
+	private JButton botonRojo;
 	
 	/**
 	 * 
 	 * @param capacidad Cantidad de vehiculos que cogen en el parking
 	 */
-	public Parking(int capacidad, JLabel etiquetaEstadoParking, JLabel etiquetacochesEnEspera, JLabel etiquetaplazasDisponibles, JTextArea logs ) {
+	public Parking(int capacidad, JLabel etiquetaEstadoParking, JLabel etiquetacochesEnEspera, JLabel etiquetaplazasDisponibles, JTextArea logs,
+			JButton botonVerde, JButton botonRojo) {
 		//partimos de que el parking esta vacio y que tiene todas sus plazas libres
 		this.capacidad = capacidad;
 		this.plazasDisponibles = capacidad/2;
@@ -33,6 +38,8 @@ public class Parking {
 		this.etiquetaEstadoParking = etiquetaEstadoParking;
 		this.etiquetaplazasDisponibles = etiquetaplazasDisponibles;
 		this.logs = logs;
+		this.botonVerde=botonVerde;
+		this.botonRojo=botonRojo;
 	}
 	/**
 	 *  Genera una plaza disponible en el parking
@@ -52,6 +59,8 @@ public class Parking {
 		//continuará generando plazas
 		this.plazasDisponibles++;
 		etiquetaEstadoParking.setText("Libre");
+		botonVerde.setBackground(Color.GREEN);
+		botonRojo.setBackground(Color.GRAY);
 		this.lleno = false;
 		//si el numero de plazas disponibles es igual a su capacidad significa que esta vacio y por tanto no puede generar mas plazas
 		this.vacio = this.plazasDisponibles == this.capacidad;
@@ -63,6 +72,8 @@ public class Parking {
 			cochesEnEspera = cochesEnEspera - plazasDisponibles;
 			plazasDisponibles = 0;
 			this.lleno = true;
+			botonVerde.setBackground(Color.GRAY);
+			botonRojo.setBackground(Color.RED);
 			this.vacio = false;
 			etiquetaplazasDisponibles.setText(plazasDisponibles+"");
 			etiquetaEstadoParking.setText("Lleno");
@@ -106,6 +117,8 @@ public class Parking {
 				cochesEnEspera = cochesEnEspera - plazasDisponibles;
 				plazasDisponibles = 0;
 				this.lleno = true;
+				botonVerde.setBackground(Color.GRAY);
+				botonRojo.setBackground(Color.RED);
 				etiquetaEstadoParking.setText("Lleno");
 				this.vacio = false;
 			}
