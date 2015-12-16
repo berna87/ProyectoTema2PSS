@@ -8,6 +8,7 @@ import javax.swing.GroupLayout.Alignment;
 import javax.swing.JPanel;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 import javax.swing.JButton;
 import javax.swing.JScrollPane;
@@ -16,6 +17,10 @@ import javax.swing.JTextArea;
 public class InterfazParking {
 
 	private JFrame frmParking;
+	private JLabel lblLibreOcupado;
+	private JLabel CochesEnEspera;
+	private JLabel lblPlazasDisponibles;
+	private JTextArea textAreaLogs;
 
 	/**
 	 * Launch the application.
@@ -49,7 +54,19 @@ public class InterfazParking {
 		frmParking.setResizable(false);
 		frmParking.setBounds(100, 100, 463, 409);
 		frmParking.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		lblLibreOcupado = new JLabel("Libre");
+		CochesEnEspera = new JLabel("xxx");
+		lblPlazasDisponibles = new JLabel("xxx");
+		textAreaLogs = new JTextArea();
 		
+		String capacidadParkingString = JOptionPane.showInputDialog(frmParking, "Introduce la capacidad del parking","Capacidad",JOptionPane.DEFAULT_OPTION); 
+		
+		//en el caso de que el usuario introduzca algo distinto de 1, 2 o 3 digitos el programa finalizará
+		if(capacidadParkingString == null || !capacidadParkingString.matches("^\\d{1,3}")|| capacidadParkingString.equals("0")){
+			JOptionPane.showMessageDialog(frmParking, "Debe introducir una capacidad \n entre 1 y 999");
+			System.exit(0);
+		}
+		int capacidadParking = Integer.parseInt(capacidadParkingString);
 		JPanel panel = new JPanel();
 		
 		JPanel panel_1 = new JPanel();
@@ -158,7 +175,7 @@ public class InterfazParking {
 					.addContainerGap())
 		);
 		
-		JTextArea textAreaLogs = new JTextArea();
+		
 		scrollPane.setViewportView(textAreaLogs);
 		panel_3.setLayout(gl_panel_3);
 		
@@ -168,11 +185,7 @@ public class InterfazParking {
 		
 		JLabel lblNewLabel_2 = new JLabel("Plazas disponibles :");
 		
-		JLabel lblLibreOcupado = new JLabel("Libre");
 		
-		JLabel CochesEnEspera = new JLabel("xxx");
-		
-		JLabel lblPlazasDisponibles = new JLabel("xxx");
 		GroupLayout gl_panel_1 = new GroupLayout(panel_1);
 		gl_panel_1.setHorizontalGroup(
 			gl_panel_1.createParallelGroup(Alignment.LEADING)
@@ -259,4 +272,5 @@ public class InterfazParking {
 		frmParking.getContentPane().setLayout(groupLayout);
 
 	}
+	
 }

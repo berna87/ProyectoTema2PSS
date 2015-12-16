@@ -43,7 +43,7 @@
 
 -Cambios en la Interfaz
 
-	-JTextArea y JLabels utilizados en la clase Parking inicializarlosal principio del inicialize
+	-JTextArea y JLabels utilizados en la clase Parking inicializarlo al principio del inicialize
 	-Solicitar mediante un JOptionPane un numero entero que indique la capacidad maxima del parking y guardarlo en un int
 		-controlar que sea un numero entero positivo y que en caso de no hacerlo el programa finalice
 	-Inicializar la clase parking con sus correspondientes atributos.
