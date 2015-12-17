@@ -8,7 +8,7 @@ public class SalidaParking extends Thread{
             this.parking = p;
             this.factorVelocidadSalida = 5;
     } 
-    
+
     @Override
     public void run() {    
             while (true){
@@ -16,16 +16,15 @@ public class SalidaParking extends Thread{
                     	if(factorVelocidadSalida==10){
                     		Thread.sleep(1000);
                     	}else{
-           
+                            parking.salidaVehiculo();
                             Thread.sleep(1000*factorVelocidadSalida);
-                            parking.salidaVehiculo();}
+                    	}
                     } catch (InterruptedException e) {
                             // TODO Auto-generated catch block
                             e.printStackTrace();
                     }
             }
     }
-
 	public void setFactorVelocidadSalida(int factorVelocidadSalida) {
 		this.factorVelocidadSalida = factorVelocidadSalida;
 	}

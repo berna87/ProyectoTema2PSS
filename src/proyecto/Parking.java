@@ -1,8 +1,6 @@
 package proyecto;
 
 import java.awt.Color;
-import java.util.Random;
-
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JTextArea;
@@ -100,7 +98,6 @@ public class Parking {
 		contadorLogs++;
 		int cochesEntraron = 0;
 		this.cochesEnEspera++;
-		if(!this.lleno){
 			//en el caso de que el numero de plazas disponibles sea mayor que los coches que haya en espera
 			//entraran todos los que haya en espera y esta cantidad se restará del numero de plazas disponibles
 			if(plazasDisponibles > cochesEnEspera){
@@ -124,11 +121,12 @@ public class Parking {
 			}
 			//como ambas situaciones modifican el estado de vacio a false, despertarán si hay algun hilo intentando producir nuevas plazas para
 			//que sigan haciendolo
-			aux = logs.getText();
-			logs.setText(contadorLogs+" - Vehiculos que entraron : "+ cochesEntraron+"\n"+aux);
-			contadorLogs++;
+			if (cochesEntraron>0){
+				aux = logs.getText();
+				logs.setText(contadorLogs+" - Vehiculos que entraron : "+ cochesEntraron+"\n"+aux);
+				contadorLogs++;
+			}
 			notifyAll();
-		}
 		etiquetacochesEnEspera.setText(""+this.cochesEnEspera);
 		etiquetaplazasDisponibles.setText(""+this.plazasDisponibles);
 	}
