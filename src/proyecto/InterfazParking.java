@@ -61,14 +61,14 @@ public class InterfazParking {
 		CochesEnEspera = new JLabel("xxx");
 		lblPlazasDisponibles = new JLabel("xxx");
 		textAreaLogs = new JTextArea();
-		JLabel lblSaleUnVehículo = new JLabel("Sale un veh\u00EDculo cada 5 segundos");
+		JLabel lblSaleUnVehiculo = new JLabel("Sale un veh\u00EDculo cada 5 segundos");
 		JLabel lblLlegaUnVehculo = new JLabel("Llega un veh\u00EDculo cada 5 segundos");
 		JButton buttonVerde = new JButton("");
 		JButton buttonRojo = new JButton("");
 		
 		String capacidadParkingString = JOptionPane.showInputDialog(frmParking, "Introduce la capacidad del parking","Capacidad",JOptionPane.DEFAULT_OPTION); 
 		
-		//en el caso de que el usuario introduzca algo distinto de 1, 2 o 3 digitos el programa finalizará
+		//en el caso de que el usuario introduzca algo distinto de 1, 2 o 3 digitos el programa finalizarï¿½
 		if(capacidadParkingString == null || !capacidadParkingString.matches("^\\d{1,3}")|| capacidadParkingString.equals("0")){
 			JOptionPane.showMessageDialog(frmParking, "Debe introducir una capacidad \n entre 1 y 999");
 			System.exit(0);
@@ -79,8 +79,11 @@ public class InterfazParking {
 		//Inicializa las clases SalidaParking y LlegadaVehiculo
 		LlegadaVehiculo llegadavehiculo = new LlegadaVehiculo(p);
 		SalidaParking salidaparking = new SalidaParking(p);
+		llegadavehiculo.setDaemon(true);
+		salidaparking.setDaemon(true);
 		
 		
+
 		JPanel panel = new JPanel();
 		
 		JPanel panel_1 = new JPanel();
@@ -144,9 +147,9 @@ public class InterfazParking {
 				if(factorSalida<10){
 					factorSalida++;
 					salidaparking.setFactorVelocidadSalida(factorSalida);
-					lblSaleUnVehículo.setText("Sale un vehículo cada "+ factorSalida+" segundos");
+					lblSaleUnVehiculo.setText("Sale un vehï¿½culo cada "+ factorSalida+" segundos");
 					if(factorSalida==10){
-						lblSaleUnVehículo.setText("Han dejado de salir vehiculos");
+						lblSaleUnVehiculo.setText("Han dejado de salir vehiculos");
 						
 					} 
 				}
@@ -159,7 +162,7 @@ public class InterfazParking {
 				if(factorSalida>1){
 					factorSalida--;
 					salidaparking.setFactorVelocidadSalida(factorSalida);
-					lblSaleUnVehículo.setText("Sale un vehículo cada "+ factorSalida+" segundos");
+					lblSaleUnVehiculo.setText("Sale un vehï¿½culo cada "+ factorSalida+" segundos");
 				}
 			}
 		});
@@ -170,14 +173,7 @@ public class InterfazParking {
 		btnForzarSalida.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if(!lblPlazasDisponibles.getText().equals(capacidadParkingString)){
-					new Thread(new Runnable() {
-						
-						@Override
-						public void run() {
-							// TODO Auto-generated method stub
-							p.salidaVehiculo();
-						}
-					}).start();
+					p.salidaVehiculo();
 				}
 			}
 		});
@@ -187,7 +183,7 @@ public class InterfazParking {
 				.addGroup(gl_panel_2.createSequentialGroup()
 					.addContainerGap()
 					.addGroup(gl_panel_2.createParallelGroup(Alignment.LEADING)
-						.addComponent(lblSaleUnVehículo, GroupLayout.DEFAULT_SIZE, 193, Short.MAX_VALUE)
+						.addComponent(lblSaleUnVehiculo, GroupLayout.DEFAULT_SIZE, 193, Short.MAX_VALUE)
 						.addComponent(lblVelocidad, GroupLayout.DEFAULT_SIZE, 193, Short.MAX_VALUE)
 						.addComponent(lblNewLabel_3, GroupLayout.DEFAULT_SIZE, 193, Short.MAX_VALUE)
 						.addGroup(gl_panel_2.createSequentialGroup()
@@ -209,7 +205,7 @@ public class InterfazParking {
 						.addComponent(btnNewButton)
 						.addComponent(btnNewButton_1))
 					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(lblSaleUnVehículo)
+					.addComponent(lblSaleUnVehiculo)
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addComponent(btnForzarSalida)
 					.addContainerGap(47, Short.MAX_VALUE))
@@ -324,13 +320,9 @@ public class InterfazParking {
 		JButton btnForzarLlegada = new JButton("Forzar llegada de vehiculo");
 		btnForzarLlegada.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new Thread(new Runnable() {
-					
-					@Override
-					public void run() {
-						p.llegaVehiculo();
-					}
-				}).start();
+				p.llegaVehiculo();
+				
+				
 			}
 		});
 		GroupLayout gl_panel = new GroupLayout(panel);
